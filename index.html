@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player - @Dhruv</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://kit.fontawesome.com/2f78a46c61.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="music-player">
+            <nav>
+                <div class="circle">
+                    <i class="fa-solid fa-angle-left"></i>
+                </div>
+                <div class="circle">
+                    <i class="fa-solid fa-bars"></i>                
+                </div>
+            </nav>
+            <img src="hello.jpg"  class="song-img">
+            <h1> </h1>
+            <p></p>
+
+            <audio id="song">
+                <source src="Aaj Ki Raat_320(PagalWorld.com.sb).mp3" type="audio/mpeg">
+            </audio>
+            <input type="range" value="0" id="progress">
+            <div class="controls">
+                <div onclick="prevSong()"><i class="fa-solid fa-backward"></i></div>
+                <div onclick="playPause()"><i class="fa-solid fa-play" id="ctrlicon"></i></div>
+
+                <div onclick="nextSong()"><i class="fa-solid fa-forward"></i></div>
+            </div>
+        </div>
+
+
+        <script>
+        let songs = [
+        { 
+            name: "aaj ki raat", 
+            src:"Aaj Ki Raat_320(PagalWorld.com.sb).mp3", 
+            img: "aajkiraat.jpeg"
+        },
+        { 
+            name: "Boyfriend", 
+            src:"Justin Bieber - Boyfriend.mp3",
+            img: "justin.jpeg"
+        },
+        { 
+            name: "Le Le maza Le", 
+           
+            src:"Le Le Mazaa Le(PagalWorld.com.so).mp3", 
+            img: "salman.jpeg"
+        }
+    ];
+    let currentSongIndex = 0;
+    let progress = document.getElementById("progress");
+    let song = document.getElementById('song');
+    let ctrlicon = document.getElementById('ctrlicon');
+    let songTitle = document.querySelector("h1");
+    
+    let songImg = document.querySelector(".song-img");
+
+    // Load the first song
+    function loadSong(songIndex) {
+        song.src = songs[songIndex].src;
+        songTitle.textContent = songs[songIndex].name;
+        
+        songImg.src = songs[songIndex].img;
+        song.onloadedmetadata = function() {
+            progress.max = song.duration;
+            progress.value = song.currentTime;
+        };
+        playPause();  // Start playing the new song
+    }
+
+    // Play/Pause button functionality
+    function playPause() {
+        if (ctrlicon.classList.contains('fa-pause')) {
+            song.pause();
+            ctrlicon.classList.remove('fa-pause');
+            ctrlicon.classList.add('fa-play');
+        } else {
+            song.play();
+            ctrlicon.classList.add('fa-pause');
+            ctrlicon.classList.remove('fa-play');
+        }
+    }
+
+    if (song.play()) {
+        setInterval(() => {
+            progress.value = song.currentTime;
+        }, 500);
+    }
+
+    progress.onchange = function() {
+        song.play();
+        song.currentTime = progress.value;
+        ctrlicon.classList.add('fa-pause');
+        ctrlicon.classList.remove('fa-play');
+    };
+
+    // Next song
+    function nextSong() {
+        currentSongIndex = (currentSongIndex + 1) % songs.length;  // Loop back to the first song
+        loadSong(currentSongIndex);
+    }
+
+    // Previous song
+    function prevSong() {
+        currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;  // Loop back to the last song
+        loadSong(currentSongIndex);
+    }
+
+    // Add event listeners for next and previous buttons
+    document.querySelector('.fa-forward').addEventListener('click', nextSong);
+    document.querySelector('.fa-backward').addEventListener('click', prevSong);
+
+    // Load the first song when the page loads
+    loadSong(currentSongIndex);
+        </script>
+        
+    </div>
+    
+</body>
+</html>
